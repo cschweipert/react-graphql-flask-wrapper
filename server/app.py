@@ -1,6 +1,9 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+import graphene
+from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
+from flask_graphql import GraphQLView
 
 app = Flask(__name__)
 CORS(app)
@@ -23,6 +26,26 @@ class User(db.Model):
 
     def __repr__(self):
         return '' % self.id
+
+class UserObject(SQLAlchemyObjectType):
+   class Meta:
+       model = User
+       interfaces = (graphene.relay.Node, )
+
+class Query(graphene.ObjectType):
+    node = graphene.relay.Node.Field()
+    all_users = SQLAlchemyConnectionField(UserObject)
+
+schema = graphene.Schema(query=Query)
+
+app.add_url_rule(
+    '/graphql-api',
+    view_func=GraphQLView.as_view(
+        'graphql',
+        schema=schema,
+        graphiql=True # GraphiQL interface
+    )
+)
 
 @app.route('/')
 def index():
