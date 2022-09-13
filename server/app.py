@@ -1,60 +1,15 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-import graphene
-from graphene_sqlalchemy import SQLAlchemyObjectType, SQLAlchemyConnectionField
 from flask_graphql import GraphQLView
+from models import connect_db
+from schema import schema
 
 app = Flask(__name__)
 CORS(app)
 app.debug = True
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///forage'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-class User(db.Model):
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, index=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-    def __init__(self, username, email):
-      self.username = username
-      self.email = email
-
-    def __repr__(self):
-        return '' % self.id
-
-class UserObject(SQLAlchemyObjectType):
-   class Meta:
-       model = User
-       interfaces = (graphene.relay.Node, )
-
-class Query(graphene.ObjectType):
-    node = graphene.relay.Node.Field()
-    all_users = SQLAlchemyConnectionField(UserObject)
-
-schema = graphene.Schema(query=Query)
-
-class AddUser(graphene.Mutation):
-    class Arguments:
-        username = graphene.String(required=True)
-        email = graphene.String(required=True)
-
-    user = graphene.Field(lambda: UserObject)
-
-    def mutate(self, info, username, email):
-        user = User(username=username, email=email)
-        db.session.add(user)
-        db.session.commit()
-        return AddUser(user=user)
-
-class Mutation(graphene.ObjectType):
-    add_user = AddUser.Field()
-
-schema = graphene.Schema(query=Query, mutation=Mutation)
+connect_db(app)
 
 app.add_url_rule(
     '/graphql-api',
