@@ -101,3 +101,9 @@ mutation {
   }
 }
 ```
+
+## git tag
+```
+git tag -a <tagname> -m '<message>'
+git push origin --tags  or git push origin <tag>
+```
