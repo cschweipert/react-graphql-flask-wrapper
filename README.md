@@ -26,7 +26,7 @@ if __name__ == '__main__':
 ## Command line
 python app.py (or flask run)
 
-## Browser
+## URL
 localhost:5000
 
 ## App
@@ -71,7 +71,7 @@ if __name__ == '__main__':
 ## Command line
 - python seed.py
 
-## Browser
+## URL
 localhost:5000/graphql-api
 
 ### get all users:
@@ -106,4 +106,62 @@ mutation {
 ```
 git tag -a <tagname> -m '<message>'
 git push origin --tags  or git push origin <tag>
+```
+
+# Getting started with React and Apollo Client
+```
+npx create-react-app client
+cd client
+npm install @apollo/client graphql
+npm start
+```
+
+### URL
+localhost:3000
+
+## APP
+# App.js:
+- fix 'undefinfed' after refresh:
+```
+import { useQuery, gql } from '@apollo/client';
+
+const GET_USERS = gql`
+query AllUsers {
+  allUsers {
+    edges {
+      node {
+        id
+        username
+        email
+      }
+    }
+  }
+}
+`;
+
+function DisplayUsers() {
+  const { loading, error, data } = useQuery(GET_USERS);
+  
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error. Sad Panda.</p>;
+
+  return (
+    <div>
+      {/* fix undefined after refresh */}
+      {data && data.allUsers.edges.map(({node}) => (
+        <div key={node.id}>
+          <p>{node.username}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div>
+      <DisplayUsers />
+    </div>
+  );
+}
 ```

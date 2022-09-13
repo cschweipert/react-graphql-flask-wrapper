@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 connect_db(app)
 
 app.add_url_rule(
-    '/graphql-api',
+    '/graphql',
     view_func=GraphQLView.as_view(
         'graphql',
         schema=schema,
@@ -20,7 +20,7 @@ app.add_url_rule(
     )
 )
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST']) # define methods to avoid 405
 def index():
     return 'Hello World!'
 
