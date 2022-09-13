@@ -38,6 +38,24 @@ class Query(graphene.ObjectType):
 
 schema = graphene.Schema(query=Query)
 
+class AddUser(graphene.Mutation):
+    class Arguments:
+        username = graphene.String(required=True)
+        email = graphene.String(required=True)
+
+    user = graphene.Field(lambda: UserObject)
+
+    def mutate(self, info, username, email):
+        user = User(username=username, email=email)
+        db.session.add(user)
+        db.session.commit()
+        return AddUser(user=user)
+
+class Mutation(graphene.ObjectType):
+    add_user = AddUser.Field()
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
+
 app.add_url_rule(
     '/graphql-api',
     view_func=GraphQLView.as_view(
