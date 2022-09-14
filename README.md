@@ -1,10 +1,15 @@
-# Getting started with Flask, graphQL, and Postgres
+# Getting started with Flask, graphQL, and Postgres (and explain it to me as if I were three.)
 ## Command line
-- python3 -m venv venv
-- source venv/bin/activate
-- pip install flask flask-graphql flask-migrate sqlalchemy graphene graphene-sqlalchemy psycopg2-binary flask-cors
-- pip freeze > requirements.txt (Note: check error messages for incompatible versions and change versions accordingly)
-- pip install -r requirements.txt
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install flask flask-graphql flask-migrate sqlalchemy graphene graphene-sqlalchemy psycopg2-binary flask-cors
+pip freeze > requirements.txt (Note: check error messages for incompatible versions and change versions accordingly)
+pip install -r requirements.txt
+```
+
+## App
+- create app.py
 
 ### app.py:
 ```
@@ -24,7 +29,9 @@ if __name__ == '__main__':
 ```
 
 ## Command line
+```
 python app.py (or flask run)
+```
 
 ## URL
 localhost:5000
@@ -33,7 +40,7 @@ localhost:5000
 - create generator/users.csv
 - create seed.py
 
-### app.py: Connect db and write user model
+### app.py: Connect db and add user model
 ```
 from flask import Flask
 from flask_cors import CORS
@@ -69,7 +76,9 @@ if __name__ == '__main__':
 ```
 
 ## Command line
-- python seed.py
+```
+python seed.py
+```
 
 ## URL
 localhost:5000/graphql-api
@@ -102,13 +111,13 @@ mutation {
 }
 ```
 
-## git tag
+<!-- ## git tag
 ```
 git tag -a <tagname> -m '<message>'
 git push origin --tags  or git push origin <tag>
-```
+``` -->
 
-# Getting started with React and Apollo Client
+# Getting started with React
 ```
 npx create-react-app client
 cd client
@@ -119,9 +128,9 @@ npm start
 ### URL
 localhost:3000
 
-## APP
+<!-- ## APP
 # App.js:
-- fix 'undefinfed' after refresh:
+- fix 'undefined' after refresh:
 ```
 import { useQuery, gql } from '@apollo/client';
 
@@ -164,4 +173,4 @@ export default function App() {
     </div>
   );
 }
-```
+``` -->
